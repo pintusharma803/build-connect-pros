@@ -2,294 +2,187 @@
 import { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-import ServiceCard from '@/components/ui/ServiceCard';
-import { Search, MapPin, Filter } from 'lucide-react';
+import ServiceCard from '@/components/services/ServiceCard';
+import { servicesData } from '@/data/services';
+import { 
+  Search, Filter, MapPin, ArrowDownAZ, 
+  Star, Briefcase, Clock, X, ChevronDown 
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Mock data for services
-const services = [
-  {
-    id: '1',
-    title: 'Expert House Painting',
-    category: 'Painting',
-    rating: 4.8,
-    imageUrl: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGFpbnRpbmclMjB3YWxsfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60',
-    price: 'From $25/hr',
-    location: 'New York, NY',
-  },
-  {
-    id: '2',
-    title: 'Plumbing Repair & Installation',
-    category: 'Plumbing',
-    rating: 4.7,
-    imageUrl: 'https://images.unsplash.com/photo-1607472586893-edb57bdc0e39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cGx1bWJpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60',
-    price: 'From $35/hr',
-    location: 'Brooklyn, NY',
-  },
-  {
-    id: '3',
-    title: 'Electrical Wiring Services',
-    category: 'Electrical',
-    rating: 4.9,
-    imageUrl: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZWxlY3RyaWNpYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60',
-    price: 'From $40/hr',
-    location: 'Queens, NY',
-  },
-  {
-    id: '4',
-    title: 'Brick & Masonry Work',
-    category: 'Masonry',
-    rating: 4.6,
-    imageUrl: 'https://images.unsplash.com/photo-1584221428599-04d05b2741ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bWFzb25yeXxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60',
-    price: 'From $30/hr',
-    location: 'Bronx, NY',
-  },
-  {
-    id: '5',
-    title: 'Custom Carpentry Solutions',
-    category: 'Carpentry',
-    rating: 4.8,
-    imageUrl: 'https://images.unsplash.com/photo-1567501384799-9df1272425e9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Y2FycGVudHJ5fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60',
-    price: 'From $28/hr',
-    location: 'Staten Island, NY',
-  },
-  {
-    id: '6',
-    title: 'Roof Repair & Installation',
-    category: 'Roofing',
-    rating: 4.7,
-    imageUrl: 'https://images.unsplash.com/photo-1504598318550-17eba1008a68?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cm9vZmluZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60',
-    price: 'From $45/hr',
-    location: 'Manhattan, NY',
-  },
-  {
-    id: '7',
-    title: 'HVAC Installation & Repair',
-    category: 'HVAC',
-    rating: 4.5,
-    imageUrl: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aHZhY3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60',
-    price: 'From $50/hr',
-    location: 'New York, NY',
-  },
-  {
-    id: '8',
-    title: 'Floor Installation Services',
-    category: 'Flooring',
-    rating: 4.6,
-    imageUrl: 'https://images.unsplash.com/photo-1581858726788-75bc0f6a952d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Zmxvb3JpbmclMjB3b29kfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60',
-    price: 'From $32/hr',
-    location: 'Brooklyn, NY',
-  },
-  {
-    id: '9',
-    title: 'Landscape Design & Installation',
-    category: 'Landscaping',
-    rating: 4.9,
-    imageUrl: 'https://images.unsplash.com/photo-1598902108854-10e335adac99?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFuZHNjYXBpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60',
-    price: 'From $38/hr',
-    location: 'Queens, NY',
-  },
-];
-
-// Categories
-const categories = [
-  'All',
-  'Painting',
-  'Plumbing',
-  'Electrical',
-  'Masonry',
-  'Carpentry',
-  'Roofing',
-  'HVAC',
-  'Flooring',
-  'Landscaping',
-];
-
-// Work types
-const workTypes = ['All Types', 'Contract-based', 'Individual Jobs'];
-
-const ServicesPage = () => {
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [activeWorkType, setActiveWorkType] = useState('All Types');
+const Services = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [location, setLocation] = useState('');
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
-  // Filter services based on selected category, work type, and search term
-  const filteredServices = services.filter(service => {
-    // Category filter
-    if (activeCategory !== 'All' && service.category !== activeCategory) {
-      return false;
-    }
-
-    // Search term filter (title, category, or location)
-    if (searchTerm && !service.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        !service.category.toLowerCase().includes(searchTerm.toLowerCase())) {
-      return false;
-    }
-
-    // Location filter
-    if (location && !service.location.toLowerCase().includes(location.toLowerCase())) {
-      return false;
-    }
-
-    return true;
+  // Available service categories
+  const categories = ['All', 'Painting', 'Plumbing', 'Electrical', 'Masonry', 'HVAC', 'Carpentry', 'Roofing', 'Flooring'];
+  
+  // Filter services by search term and category
+  const filteredServices = servicesData.filter(service => {
+    const matchesSearch = 
+      service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesCategory = 
+      selectedCategory === '' || 
+      selectedCategory === 'All' || 
+      service.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
   });
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow pt-24 pb-16">
-        <section className="container-custom">
-          {/* Page Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              Find the Perfect <span className="text-brand-blue-600">Service</span>
-            </h1>
-            <p className="text-gray-600">
-              Browse through our comprehensive list of services or use filters to find exactly what you need.
-            </p>
-          </div>
-
-          {/* Search and Filter */}
-          <div className="bg-white p-4 rounded-2xl shadow-sm mb-8">
-            <div className="flex flex-col lg:flex-row gap-4">
-              <div className="relative flex-grow">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+        {/* Hero Section */}
+        <section className="bg-brand-blue-50 py-16">
+          <div className="container-custom">
+            <div className="max-w-3xl mx-auto text-center">
+              <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                Find the Perfect <span className="text-brand-blue-600">Service</span>
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                Browse through our wide range of professional construction and labor services
+              </p>
+              
+              {/* Search Bar */}
+              <div className="relative max-w-2xl mx-auto">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <Search className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   type="text"
-                  placeholder="Search service..."
-                  className="input-field pl-10"
+                  placeholder="Search for a service..."
+                  className="input-field pl-12 pr-4 py-3 w-full"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                <Button
+                  className="absolute right-2 top-2 bg-brand-blue-600 hover:bg-brand-blue-700 text-white"
+                >
+                  Search
+                </Button>
               </div>
-              <div className="relative flex-grow">
-                <MapPin className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Location"
-                  className="input-field pl-10"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </div>
-              <Button
-                className="lg:w-auto flex items-center gap-2"
-                variant="outline"
-                onClick={() => setIsFilterOpen(!isFilterOpen)}
-              >
-                <Filter className="h-5 w-5" />
-                Filters
-              </Button>
             </div>
-
-            {/* Expanded Filters */}
-            {isFilterOpen && (
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {/* Categories */}
-                  <div>
-                    <h3 className="font-medium mb-2">Categories</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {categories.map((category) => (
-                        <button
-                          key={category}
-                          onClick={() => setActiveCategory(category)}
-                          className={`px-3 py-1 rounded-full text-sm transition-all ${
-                            activeCategory === category
-                              ? 'bg-brand-blue-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          {category}
-                        </button>
-                      ))}
+          </div>
+        </section>
+        
+        {/* Filters Section */}
+        <section className="py-8 border-b border-gray-200">
+          <div className="container-custom">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex flex-wrap gap-2">
+                {categories.slice(0, 5).map((category) => (
+                  <button
+                    key={category}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      selectedCategory === category
+                        ? 'bg-brand-blue-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                    onClick={() => setSelectedCategory(category === 'All' ? '' : category)}
+                  >
+                    {category}
+                  </button>
+                ))}
+                
+                <div className="relative inline-block">
+                  <button
+                    className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center gap-1"
+                    onClick={() => setFiltersOpen(!filtersOpen)}
+                  >
+                    More <ChevronDown className="h-4 w-4" />
+                  </button>
+                  
+                  {filtersOpen && (
+                    <div className="absolute z-10 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                      <div className="py-1" role="menu" aria-orientation="vertical">
+                        {categories.slice(5).map((category) => (
+                          <button
+                            key={category}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => {
+                              setSelectedCategory(category);
+                              setFiltersOpen(false);
+                            }}
+                          >
+                            {category}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-
-                  {/* Work Type */}
-                  <div>
-                    <h3 className="font-medium mb-2">Work Type</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {workTypes.map((type) => (
-                        <button
-                          key={type}
-                          onClick={() => setActiveWorkType(type)}
-                          className={`px-3 py-1 rounded-full text-sm transition-all ${
-                            activeWorkType === type
-                              ? 'bg-brand-blue-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                          }`}
-                        >
-                          {type}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                  )}
                 </div>
-
-                {/* Additional Filters */}
-                <div className="mt-4">
-                  <h3 className="font-medium mb-2">Price Range</h3>
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="range"
-                      min="10"
-                      max="100"
-                      defaultValue="50"
-                      className="w-full"
-                    />
-                    <span className="text-sm text-gray-600">$10 - $100/hr</span>
-                  </div>
-                </div>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
+                  <Filter className="h-4 w-4" /> Filter
+                </Button>
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
+                  <ArrowDownAZ className="h-4 w-4" /> Sort
+                </Button>
+              </div>
+            </div>
+            
+            {selectedCategory && (
+              <div className="mt-4 flex items-center">
+                <span className="mr-2 text-sm text-gray-500">Filters:</span>
+                <span className="bg-brand-blue-50 text-brand-blue-700 px-3 py-1 rounded-full text-sm flex items-center">
+                  {selectedCategory}
+                  <button 
+                    onClick={() => setSelectedCategory('')}
+                    className="ml-1 text-brand-blue-700 hover:text-brand-blue-900"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </span>
               </div>
             )}
           </div>
-
-          {/* Results Count */}
-          <div className="mb-6">
-            <p className="text-gray-600">
-              {filteredServices.length} services found
-              {activeCategory !== 'All' && ` in ${activeCategory}`}
-              {searchTerm && ` matching "${searchTerm}"`}
-            </p>
-          </div>
-
-          {/* Service Cards */}
-          {filteredServices.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredServices.map((service) => (
-                <ServiceCard
-                  key={service.id}
-                  id={service.id}
-                  title={service.title}
-                  category={service.category}
-                  rating={service.rating}
-                  imageUrl={service.imageUrl}
-                  price={service.price}
-                  location={service.location}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <p className="text-xl mb-2">No services found</p>
-              <p className="text-gray-600 mb-4">
-                Try adjusting your filters or search terms to find what you're looking for.
-              </p>
-              <Button
-                onClick={() => {
-                  setActiveCategory('All');
-                  setActiveWorkType('All Types');
+        </section>
+        
+        {/* Services Grid */}
+        <section className="py-12">
+          <div className="container-custom">
+            {filteredServices.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filteredServices.map((service) => (
+                  <ServiceCard
+                    key={service.id}
+                    id={service.id}
+                    title={service.title}
+                    category={service.category}
+                    description={service.description}
+                    price={service.price}
+                    priceType={service.priceType}
+                    location={service.location}
+                    rating={service.rating}
+                    reviews={service.reviews}
+                    image={service.image}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <div className="mb-4">
+                  <Search className="h-12 w-12 text-gray-300 mx-auto" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">No Services Found</h3>
+                <p className="text-gray-600 mb-6">
+                  We couldn't find any services matching your criteria.
+                </p>
+                <Button onClick={() => {
                   setSearchTerm('');
-                  setLocation('');
-                }}
-              >
-                Reset Filters
-              </Button>
-            </div>
-          )}
+                  setSelectedCategory('');
+                }}>
+                  Clear Filters
+                </Button>
+              </div>
+            )}
+          </div>
         </section>
       </main>
       <Footer />
@@ -297,4 +190,4 @@ const ServicesPage = () => {
   );
 };
 
-export default ServicesPage;
+export default Services;
