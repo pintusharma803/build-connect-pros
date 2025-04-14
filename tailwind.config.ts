@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,48 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+        // Custom colors
+        brand: {
+          blue: {
+            DEFAULT: '#1E5BDB',
+            50: '#EBF1FD',
+            100: '#D7E3FC',
+            200: '#AFC7F9',
+            300: '#87ABF5',
+            400: '#5F8FF1',
+            500: '#3773ED',
+            600: '#1E5BDB',
+            700: '#1848B0',
+            800: '#123585',
+            900: '#0C235A',
+          },
+          orange: {
+            DEFAULT: '#F97316',
+            50: '#FEF2E6',
+            100: '#FDE5CC',
+            200: '#FBC999',
+            300: '#FAAE66',
+            400: '#F89233',
+            500: '#F97316',
+            600: '#D95E0A',
+            700: '#B04B06',
+            800: '#883804',
+            900: '#602802',
+          },
+          gray: {
+            50: '#F6F6F7',
+            100: '#EEEDEF',
+            200: '#D7D7D9',
+            300: '#C1C0C4',
+            400: '#8E9196',
+            500: '#403E43',
+            600: '#4B4952',
+            700: '#353339',
+            800: '#221F26',
+            900: '#100F12',
+          }
+        }
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -70,26 +112,88 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
-				}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
+				},
+        'float': {
+          '0%, 100%': {
+            transform: 'translateY(0)',
+          },
+          '50%': {
+            transform: 'translateY(-10px)',
+          }
+        },
+        'pulse-light': {
+          '0%, 100%': {
+            opacity: '1',
+          },
+          '50%': {
+            opacity: '0.8',
+          }
+        },
+        'slide-up': {
+          '0%': {
+            transform: 'translateY(20px)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+            opacity: '1',
+          }
+        },
+        'slide-down': {
+          '0%': {
+            transform: 'translateY(-20px)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateY(0)',
+            opacity: '1',
+          }
+        },
+        'slide-in-right': {
+          '0%': {
+            transform: 'translateX(100%)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: '1',
+          }
+        },
+        'slide-in-left': {
+          '0%': {
+            transform: 'translateX(-100%)',
+            opacity: '0',
+          },
+          '100%': {
+            transform: 'translateX(0)',
+            opacity: '1',
+          }
+        },
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+        'float': 'float 3s ease-in-out infinite',
+        'pulse-light': 'pulse-light 2s ease-in-out infinite',
+        'slide-up': 'slide-up 0.5s ease-out',
+        'slide-down': 'slide-down 0.5s ease-out',
+        'slide-in-right': 'slide-in-right 0.5s ease-out',
+        'slide-in-left': 'slide-in-left 0.5s ease-out',
+			},
+      fontFamily: {
+        sans: ['Inter', 'sans-serif'],
+        heading: ['Poppins', 'sans-serif'],
+      },
+      boxShadow: {
+        'card': '0 4px 24px rgba(0, 0, 0, 0.05)',
+        'card-hover': '0 8px 32px rgba(0, 0, 0, 0.1)',
+      }
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
